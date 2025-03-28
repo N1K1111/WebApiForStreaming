@@ -32,12 +32,12 @@ namespace WebApiForStreaming.Controllers
                 {
                     StreamerId = request.StreamerId,
                     Title = request.Title,
-                    SrtPath = $"srt://89.169.135.34:9998?streamid={request.StreamerId}", // Пример пути
+                    SrtPath = $"srt://89.169.135.34:9998?streamid={request.StreamerId}", // Для зрителей
                     Status = "active",
                     CreatedAt = DateTime.UtcNow
                 };
                 _streamService.AddStream(stream);
-                return Ok(new { Message = "Stream created", Stream = stream });
+                return Ok(new { Message = "Stream created", StreamerUrl = "srt://89.169.135.34:9999", Stream = stream });
             }
             catch (InvalidOperationException ex)
             {
@@ -49,15 +49,15 @@ namespace WebApiForStreaming.Controllers
         [HttpDelete("{streamerId}")]
         public ActionResult DeleteStream(string streamerId)
         {
-            _streamService.RemoveStream(streamerId);
-            return Ok(new { Message = $"Stream {streamerId} removed" });
+                _streamService.RemoveStream(streamerId);
+                return Ok(new { Message = $"Stream {streamerId} removed" });
+            }
+        }
+
+        // DTO для запроса на создание трансляции
+        public class CreateStreamRequest
+        {
+            public string StreamerId { get; set; }
+            public string Title { get; set; }
         }
     }
-
-    // DTO для запроса на создание трансляции
-    public class CreateStreamRequest
-    {
-        public string StreamerId { get; set; }
-        public string Title { get; set; }
-    }
-}
